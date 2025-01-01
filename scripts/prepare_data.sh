@@ -4,21 +4,19 @@
 set -e
 
 # Data path
-RAW_DATA_DIR="data/raw"
-PROCESSED_DATA_DIR="data/processed"
+RAW_DATA_DIR="../data/raw"
+PROCESSED_DATA_DIR="../data/processed"
 
 echo "🚀 Starting data preparation..."
 
 # Activate the virtual environment
-source .venv/bin/activate
+source ../.venv/bin/activate
 
 # Install unzip
 echo "📥 Installing unzip..."
 sudo apt-get install unzip
 
-
-
-# Download dataset (replace with your actual download command)
+# Download dataset 
 if [ ! -d "$RAW_DATA_DIR" ]; then
     echo "📥 Downloading dataset..."
     mkdir -p $RAW_DATA_DIR
