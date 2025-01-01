@@ -20,7 +20,7 @@ sudo apt-get install unzip
 if [ ! -d "$RAW_DATA_DIR" ]; then
     echo "📥 Downloading dataset..."
     mkdir -p $RAW_DATA_DIR
-
+    
     curl -L -o $RAW_DATA_DIR/flickr-image-dataset.zip\
         https://www.kaggle.com/api/v1/datasets/download/hsankesara/flickr-image-dataset 
     
