@@ -165,3 +165,4 @@ models/checkpoints/model_1.pth
 models/*.onnx
 
 /data/processed/
+wandb/
