@@ -1,7 +1,7 @@
 from pathlib import Path
 import pickle
 import torch
-from utils.config import Config
+from config import Config
 
 import numpy as np
 
@@ -124,3 +124,4 @@ if __name__ == "__main__":
     # print(new_text)
     # print(len(text_manager.word_to_idx))
     
+    print("Done")

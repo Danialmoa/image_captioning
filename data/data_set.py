@@ -5,7 +5,7 @@ from torch.utils.data import Dataset, DataLoader
 from torchvision import transforms
 from PIL import Image
 from text.tokenizer import Tokenizer
-from utils.config import Config
+from config import Config
 
 class DataSet(Dataset):
     """

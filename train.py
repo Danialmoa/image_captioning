@@ -8,7 +8,7 @@ from torchvision import transforms
 import os
 from datetime import datetime
 
-from utils.config import Config
+from config import Config
 from models.models import ImageCaptioningModel
 from models.attention_model import ImageCaptioningWithAttention
 from data.data_set import DataSet

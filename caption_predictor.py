@@ -5,7 +5,7 @@ from torchvision import transforms
 import pandas as pd
 from tqdm import tqdm
 
-from utils.config import Config
+from config import Config
 from models.models import ImageCaptioningModel
 from models.attention_model import ImageCaptioningWithAttention
 from data.data_set import DataSet
