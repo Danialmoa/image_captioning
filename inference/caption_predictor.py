@@ -6,7 +6,7 @@ import pandas as pd
 from tqdm import tqdm
 
 from config import Config
-from models.models import ImageCaptioningModel
+from models.base import ImageCaptioningModel
 from models.attention_model import ImageCaptioningWithAttention
 from data.data_set import DataSet
 from text.tokenizer import Tokenizer
