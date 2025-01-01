@@ -8,12 +8,22 @@ import string
 import re
 
 class PreProcessing:
+    """
+    This class is used to preprocess the data. 
+    It is used to get the image list, the caption list, and to make the caption dictionary.
+    """
     @staticmethod
     def get_image_list(path):
+        """
+        Returns the list of images in the given path.
+        """
         return os.listdir(path)
     
     @staticmethod
     def get_caption_list(path):
+        """
+        Returns the list of captions in the given path.
+        """
         with open(path, 'r') as file:
             lines = file.readlines()
             lines = [line.strip() for line in lines]
@@ -21,6 +31,10 @@ class PreProcessing:
         
     @staticmethod
     def make_caption_dict(caption_list):
+        """
+        Returns the caption dictionary.
+        Each key is an image name and the value is a list of captions for that image.
+        """
         caption_dict = {}
         for line in caption_list:
             if ".jpg" in line:
@@ -51,6 +65,9 @@ class PreProcessing:
         
     @staticmethod
     def divide_images(image_list, train_ratio=0.8, val_ratio=0.1, test_ratio=0.1):
+        """
+        Divides the image list into train, validation, and test sets.
+        """
         # shuffle the image list
         total_images = len(image_list)
         random.shuffle(image_list)
@@ -63,6 +80,9 @@ class PreProcessing:
         
     @staticmethod
     def make_index(image_list, caption_dict):
+        """
+        Makes the index for the images and captions.
+        """
         counter = 0
         text_output = []
         for image in image_list:
@@ -73,6 +93,9 @@ class PreProcessing:
         
     @staticmethod
     def save_data(image_list, caption_index, folder_name):
+        """
+        Saves the data to the given folder.
+        """
         base_path = "data/raw/images"
         main_path = "data/processed/"
         os.makedirs(os.path.join(main_path, folder_name), exist_ok=True)
@@ -87,17 +110,23 @@ class PreProcessing:
 
 
 if __name__ == "__main__":
-    print("I've done once, if you want to do it again, please delete the data/processed folder")
+    print("Starting the pre-processing")
     pre_processing = PreProcessing()
     image_list = pre_processing.get_image_list("data/raw/images")
+    print("Getting the caption list")
+    print("Number of images: ", len(image_list))
     caption_list = pre_processing.get_caption_list("data/raw/captions.txt")
+    print("Number of captions: ", len(caption_list))
     caption_dict = pre_processing.make_caption_dict(caption_list)
+    
+    print("Dividing the images into train, validation, and test sets")
     train_images, val_images, test_images = pre_processing.divide_images(image_list)
     
     train_index = pre_processing.make_index(train_images, caption_dict)
     val_index = pre_processing.make_index(val_images, caption_dict)
     test_index = pre_processing.make_index(test_images, caption_dict)
     
+    print("Saving the data")
     pre_processing.save_data(train_images, train_index, "train")
     pre_processing.save_data(val_images, val_index, "val")
     pre_processing.save_data(test_images, test_index, "test")
