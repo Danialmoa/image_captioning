@@ -1,6 +1,4 @@
 from pathlib import Path
-import string
-import re
 import pickle
 import torch
 from utils.config import Config
@@ -67,26 +65,11 @@ class Tokenizer:
         print('vocab size', len(self.word_to_idx))
         print('max seq length', self.max_seq_length)
         print('padding idx', self.word_to_idx["<pad>"])
-        
-        
-    # def use_model2vec(self, text, max_length=config.max_length):
-    #     """
-    #     Uses the model2vec to tokenize the text.
-    #     """
-    #     model = StaticModel.from_pretrained("minishlab/potion-base-8M")
-    #     text = ["<start>"] + self.word_tokenization(text) + ["<end>"] 
-    #     text = text + ["<pad>"] * (max_length - len(text))
-    #     embeddings = np.zeros((len(text), model.dim))
-    #     for i, each_word in enumerate(text):
-    #         embeddings[i] = model.encode(each_word)
-    #     embeddings = torch.tensor(embeddings)
-        
-    #     return embeddings.float()
-    
     
     def create_seq_tensor(self, text):
         """
         Creates a tensor of sequences from the tokenized captions.
+        Add the start, end, and padding tokens to the sequence.
         """
         if not self.word_to_idx :
             raise ValueError("Word2idx dictionary is not initialized")
@@ -114,6 +97,7 @@ class Tokenizer:
         
 
 if __name__ == "__main__":
+    print("Starting the tokenizer")
     text_manager = Tokenizer()
     
     train_indexs = open("data/processed/train/index.txt", "r").readlines()
@@ -122,19 +106,21 @@ if __name__ == "__main__":
     
     indexs = train_indexs + val_indexs + test_indexs
     
-    #text_manager.create_vocab(indexs)
-    #text_manager.save_dicts("data/processed/dicts.pkl")
+    print("Creating the vocabulary")
+    text_manager.create_vocab(indexs)
+    print("Saving the dictionaries")
+    text_manager.save_dicts("data/processed/dicts.pkl")
     
-    text_manager.load_dicts("data/processed/dicts.pkl")
+    # text_manager.load_dicts("data/processed/dicts.pkl")
 
-    #create the sequence tensor
-    text = "a two child in a pink dress is climbing up a set of stairs in an entry way ."
-    new_text = ""
-    seq_tensor = text_manager.create_seq_tensor(text)
-    print(seq_tensor)
-    print(seq_tensor.shape)
-    for i in range(len(seq_tensor)):
-        new_text += text_manager.idx_to_word[seq_tensor[i].item()] + ' '
-    print(new_text)
-    print(len(text_manager.word_to_idx))
+    #create the sequence tensor ---> Test the tokenizer
+    # text = "a two child in a pink dress is climbing up a set of stairs in an entry way ."
+    # new_text = ""
+    # seq_tensor = text_manager.create_seq_tensor(text)
+    # print(seq_tensor)
+    # print(seq_tensor.shape)
+    # for i in range(len(seq_tensor)):
+    #     new_text += text_manager.idx_to_word[seq_tensor[i].item()] + ' '
+    # print(new_text)
+    # print(len(text_manager.word_to_idx))
     
