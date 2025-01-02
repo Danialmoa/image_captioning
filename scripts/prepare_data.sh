@@ -21,8 +21,18 @@ if [ ! -d "$RAW_DATA_DIR" ]; then
     echo "📥 Downloading dataset..."
     mkdir -p $RAW_DATA_DIR
     
-    curl -L -o $RAW_DATA_DIR/flickr-image-dataset.zip\
-        https://www.kaggle.com/api/v1/datasets/download/hsankesara/flickr-image-dataset 
+    # Download the dataset
+    read -p "You can select two datasets, flickr8k or flickr30k, which one do you want to download? (1- flickr8k/2- flickr30k): " dataset
+    if [ "$dataset" == "1" ]; then
+        curl -L -o $RAW_DATA_DIR/flickr-image-dataset.zip\
+            https://www.kaggle.com/api/v1/datasets/download/adityajn105/flickr8k
+    elif [ "$dataset" == "2" ]; then
+        curl -L -o $RAW_DATA_DIR/flickr-image-dataset.zip\
+            https://www.kaggle.com/api/v1/datasets/download/hsankesara/flickr-image-dataset
+    else
+        echo "Invalid dataset selection. Please select either flickr8k or flickr30k."
+        exit 1
+    fi
     
     # Unzip the dataset
     echo "📂 Unzipping dataset..."
