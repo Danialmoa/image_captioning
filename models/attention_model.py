@@ -92,7 +92,7 @@ class ImageCaptioningWithAttention(nn.Module):
         
         
 if __name__ == "__main__":
-    import config as config
+    import utils.config as config
     from data.data_set import DataSet
     from torch.utils.data import DataLoader
     from torchvision import transforms

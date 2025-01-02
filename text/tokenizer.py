@@ -1,7 +1,7 @@
 from pathlib import Path
 import pickle
 import torch
-from config import Config
+from utils.config import Config
 
 import numpy as np
 

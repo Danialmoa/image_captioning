@@ -5,28 +5,29 @@ from torchvision import transforms
 import pandas as pd
 from tqdm import tqdm
 
-from config import Config
+from utils.config import Config
 from models.base import ImageCaptioningModel
 from models.attention_model import ImageCaptioningWithAttention
 from data.data_set import DataSet
 from text.tokenizer import Tokenizer
 
 class CaptionPredictor:
-    def __init__(self, model, transform, tokenizer, config):
+    def __init__(self, model, transform, tokenizer, config, device):
         self.model = model
         self.transform = transform
         self.tokenizer = tokenizer
         self.config = config
-
+        self.device = device
+        
         self.model.eval()
 
     def predict_single_image(self, image):
         with torch.no_grad():
-            features = self.model.encoder(image.unsqueeze(0).to(self.config.device))
+            features = self.model.encoder(image.unsqueeze(0).to(self.device))
             caption = [self.tokenizer.word_to_idx['<start>']]
             
             for _ in range(self.config.max_length):
-                inputs = torch.tensor([caption]).to(self.config.device)
+                inputs = torch.tensor([caption]).to(self.device)
                 outputs = self.model.decoder(features, inputs)
                 temperature = 0.8  
                 probs = torch.softmax(outputs[:, -1, :] / temperature, dim=-1)
@@ -56,12 +57,14 @@ class CaptionPredictor:
 
 if __name__ == "__main__":
     
-    MODEL_PATH = "models/checkpoints/new_runs/run_11"
+    MODEL_PATH = "models/checkpoints/new_runs/run_12"
     
-    config = Config(experiment_id=11)
+    config = Config(experiment_id=12)
+    device = "mps" if torch.backends.mps.is_available() else "cpu"
+    
     #model = ImageCaptioningModel(config.embedding_dim, config.hidden_dim, config.vocab_size, config.num_layers, config.dropout_rate).to(config.device)
-    model = ImageCaptioningWithAttention(config.embed_size, config.attention_dim, config.decoder_dim, config.vocab_size, config.encoder_dim).to(config.device)
-    model.load_state_dict(torch.load(f"{MODEL_PATH}/best_model.pth", map_location=config.device, weights_only=True))
+    model = ImageCaptioningWithAttention(config.embed_size, config.attention_dim, config.decoder_dim, config.vocab_size, config.encoder_dim).to(device)
+    model.load_state_dict(torch.load(f"{MODEL_PATH}/best_model.pth", map_location=device, weights_only=True))
     
     transform = transforms.Compose([
         transforms.Resize((224, 224)),
@@ -74,7 +77,7 @@ if __name__ == "__main__":
     test_set = DataSet(config.path, transform, tokenizer, data_type="test")
     test_loader = DataLoader(test_set, batch_size=4)
     
-    predictor = CaptionPredictor(model, transform, tokenizer, config)
+    predictor = CaptionPredictor(model, transform, tokenizer, config, device)
     predicted_captions = []
     true_captions = []
     image_names = []
