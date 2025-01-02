@@ -9,22 +9,16 @@ def evaluate_captions(true_captions, predicted_captions):
     """
     Evaluate captions using BLEU score from torchmetrics
     """
-    # Initialize BLEU score metric
-    bleu = BLEUScore(n_gram=1)  # Using up to 4-grams
-    
-    # Calculate individual BLEU scores for analysis
+    bleu = BLEUScore(n_gram=1)
     individual_scores = []
     
     for true, pred in tqdm(zip(true_captions, predicted_captions), total=len(true_captions)):
-        # Convert single caption to list format required by torchmetrics
         true_list = [true]
         pred_list = [pred]
         
-        # Calculate individual score
         score = bleu(pred_list, [true_list])
         individual_scores.append(score.item())
     
-    # Calculate overall BLEU score
     overall_bleu = bleu(predicted_captions, [[cap] for cap in true_captions])
     
     return individual_scores, overall_bleu.item()
@@ -33,7 +27,6 @@ def post_process_caption(caption, type="prediction"):
     """
     Apply post-processing to the generated caption
     """
-    # Ensure there's a period at the end
     if not caption.endswith('.'):
         caption = caption + '.'
         
@@ -81,7 +74,7 @@ def analyze_results(true_captions, predicted_captions, model_name):
     return results_df
 
 if __name__ == "__main__":
-    MODEL_NAME = "new_runs/run_11"
+    MODEL_NAME = "new_runs/run_12"
     
     data_path = f"models/checkpoints/{MODEL_NAME}/predictions.csv"
     results_df = pd.read_csv(data_path)

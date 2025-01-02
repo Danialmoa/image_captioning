@@ -74,7 +74,8 @@ if __name__ == "__main__":
     tokenizer = Tokenizer()
     tokenizer.load_dicts(config.path + "/dicts.pkl")
     
-    test_set = DataSet(config.path, transform, tokenizer, data_type="test")
+    test_set = DataSet(config.path, transform, tokenizer, data_type="test", sample_size=10000)
+    print(len(test_set))
     test_loader = DataLoader(test_set, batch_size=4)
     
     predictor = CaptionPredictor(model, transform, tokenizer, config, device)
