@@ -133,7 +133,7 @@ class Trainer:
 if __name__ == "__main__":
 
     os.makedirs(os.path.join("models/checkpoints"), exist_ok=True)
-    experiment_id = 12
+    experiment_id = 13
     config = Config(experiment_id=experiment_id)
     os.makedirs(os.path.join("models/checkpoints", config.model_name), exist_ok=True)
 
