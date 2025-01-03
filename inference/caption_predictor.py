@@ -46,20 +46,20 @@ class CaptionPredictor:
             predicted_captions.append(predicted_text)
         return predicted_captions
     
-    def save_predictions(self, model_path, image_paths, true_captions, predicted_captions):
+    def save_predictions(self, model_path, image_names, true_captions, predicted_captions):
         results_df = pd.DataFrame({
-            'True Caption': true_captions,
-            'Predicted Caption': predicted_captions
+            'TrueCaption': true_captions,
+            'PredictedCaption': predicted_captions
         })
-        results_df['Image Path'] = image_paths
+        results_df['ImageName'] = image_names
         results_df.to_csv(f'{model_path}/predictions.csv', index=False)
 
 
 if __name__ == "__main__":
+    run_id = 10
+    MODEL_PATH = f"models/checkpoints/new_runs/run_{run_id}"
     
-    MODEL_PATH = "models/checkpoints/new_runs/run_12"
-    
-    config = Config(experiment_id=12)
+    config = Config(experiment_id=run_id)
     device = "mps" if torch.backends.mps.is_available() else "cpu"
     
     #model = ImageCaptioningModel(config.embedding_dim, config.hidden_dim, config.vocab_size, config.num_layers, config.dropout_rate).to(config.device)
@@ -81,10 +81,10 @@ if __name__ == "__main__":
     predictor = CaptionPredictor(model, transform, tokenizer, config, device)
     predicted_captions = []
     true_captions = []
-    image_names = []
-    for i, (images, captions) in tqdm(enumerate(test_loader)):
+    image_names_all = []
+    for i, (images, captions, image_names) in tqdm(enumerate(test_loader)):
         predicted_captions.extend(predictor.predict_multiple_images(images))
         true_captions.extend([tokenizer.decode_caption(caption) for caption in captions])
-        image_names.extend(images)
-    
-    predictor.save_predictions(MODEL_PATH, image_names, true_captions, predicted_captions)
+        image_names_all.extend([this_image_name for this_image_name in image_names])
+
+    predictor.save_predictions(MODEL_PATH, image_names_all, true_captions, predicted_captions)

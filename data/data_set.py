@@ -52,7 +52,7 @@ class DataSet(Dataset):
         text_tensor = self.tokenizer.create_seq_tensor(caption)
         caption_tensor = torch.as_tensor(text_tensor, dtype=torch.long)
         
-        return image, caption_tensor
+        return image, caption_tensor, image_name
 
     
 
