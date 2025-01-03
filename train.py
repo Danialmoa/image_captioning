@@ -92,7 +92,7 @@ class Trainer:
         self.image_captioning_model.eval()
         total_loss = 0
         with torch.no_grad():
-            for images, captions in data_loader:
+            for images, captions, image_names in data_loader:
                 images = images.to(self.config.device)
                 captions = captions.to(self.config.device)  
                 inputs = captions[:, :-1]
