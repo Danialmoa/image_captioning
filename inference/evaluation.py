@@ -41,7 +41,7 @@ def post_process_caption(caption, type="prediction"):
     
     return caption
 
-def analyze_results(true_captions, predicted_captions, model_name):
+def analyze_results(true_captions, predicted_captions, image_names, model_name):
     """
     Analyze and display caption generation results
     """
@@ -56,6 +56,7 @@ def analyze_results(true_captions, predicted_captions, model_name):
     results_df = pd.DataFrame({
         'True Caption': processed_true_captions,
         'Predicted Caption': processed_predictions,
+        'Image Name': image_names,
         'BLEU Score': individual_scores
     })
     
@@ -74,12 +75,14 @@ def analyze_results(true_captions, predicted_captions, model_name):
     return results_df
 
 if __name__ == "__main__":
-    MODEL_NAME = "new_runs/run_12"
+    MODEL_NAME = "run_10"
     
     data_path = f"models/checkpoints/{MODEL_NAME}/predictions.csv"
     results_df = pd.read_csv(data_path)
-    true_captions = results_df["True Caption"].tolist()
-    predicted_captions = results_df["Predicted Caption"].tolist()
+
+    true_captions = results_df["TrueCaption"].tolist()
+    predicted_captions = results_df["PredictedCaption"].tolist()
+    image_names = results_df["ImageName"].tolist()
 
     model_name = MODEL_NAME
-    analyze_results(true_captions, predicted_captions, model_name)
+    analyze_results(true_captions, predicted_captions, image_names, model_name)

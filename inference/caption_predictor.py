@@ -57,7 +57,7 @@ class CaptionPredictor:
 
 if __name__ == "__main__":
     run_id = 10
-    MODEL_PATH = f"models/checkpoints/new_runs/run_{run_id}"
+    MODEL_PATH = f"models/checkpoints/run_{run_id}"
     
     config = Config(experiment_id=run_id)
     device = "mps" if torch.backends.mps.is_available() else "cpu"
@@ -76,13 +76,13 @@ if __name__ == "__main__":
     
     test_set = DataSet(config.path, transform, tokenizer, data_type="test")
     print(len(test_set))
-    test_loader = DataLoader(test_set, batch_size=4)
+    test_loader = DataLoader(test_set, batch_size=8, shuffle=False)
     
     predictor = CaptionPredictor(model, transform, tokenizer, config, device)
     predicted_captions = []
     true_captions = []
     image_names_all = []
-    for i, (images, captions, image_names) in tqdm(enumerate(test_loader)):
+    for i, (images, captions, image_names) in tqdm(enumerate(test_loader), total=len(test_loader), desc="Predicting captions"):
         predicted_captions.extend(predictor.predict_multiple_images(images))
         true_captions.extend([tokenizer.decode_caption(caption) for caption in captions])
         image_names_all.extend([this_image_name for this_image_name in image_names])

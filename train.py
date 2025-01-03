@@ -19,7 +19,7 @@ import wandb
 
 
 class EarlyStopping:
-    def __init__(self, model, path="models/checkpoints/best_model.pth", patience=10, delta=0):
+    def __init__(self, model, path, patience=10, delta=0):
         self.model = model
         self.patience = patience
         self.delta = delta

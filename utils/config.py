@@ -107,6 +107,10 @@ class Config:
             self.embed_size = 256
             self.model_name = "run_10"
             self.model_type = "attention"
+            
+            self.max_length = 37
+            self.padding_idx = 8778
+            self.vocab_size = 8785
         
         elif experiment_id == 11:
             self.learning_rate = 0.0001
@@ -118,6 +122,10 @@ class Config:
             self.embed_size = 256
             self.model_name = "run_11"
             self.model_type = "attention"
+            
+            self.max_length = 37
+            self.padding_idx = 8778
+            self.vocab_size = 8785
             
         elif experiment_id == 12:
             # 12 is the same as 10 but with a different dataset
