@@ -139,5 +139,17 @@ class Config:
             self.model_name = "run_12"
             self.model_type = "attention"
             
+        elif experiment_id == 13:
+            # 12 is the same as 10 but with a different dataset
+            self.learning_rate = 0.0001
+            self.batch_size = 16
+            self.hidden_dim = 256
+            self.attention_dim = 256
+            self.decoder_dim = 512
+            self.encoder_dim = 256
+            self.embed_size = 256
+            self.model_name = "run_13"
+            self.model_type = "attention"
+            
             
 config = Config()
