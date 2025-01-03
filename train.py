@@ -66,7 +66,7 @@ class Trainer:
     def train_one_epoch(self, data_loader):
         self.image_captioning_model.train()
         total_loss = 0
-        for images, captions in data_loader:
+        for images, captions, image_names in data_loader:
             images = images.to(self.config.device)
             captions = captions.to(self.config.device)
             
