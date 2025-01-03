@@ -40,8 +40,8 @@ if [ ! -d "$RAW_DATA_DIR" ]; then
         echo "📂 Unzipping dataset..."
         unzip -q $RAW_DATA_DIR/flickr-image-dataset.zip -d $RAW_DATA_DIR
         mkdir -p $RAW_DATA_DIR/images
-        mv $RAW_DATA_DIR/flickr-image-dataset/*.jpg $RAW_DATA_DIR/images/
-        mv $RAW_DATA_DIR/flickr-image-dataset/results.csv $RAW_DATA_DIR/captions.txt
+        mv $RAW_DATA_DIR/flickr30k_images/flickr30k_images/*.jpg $RAW_DATA_DIR/images/
+        mv $RAW_DATA_DIR/flickr30k_images/results.csv $RAW_DATA_DIR/captions.txt
     else
         echo "Invalid dataset selection. Please select either flickr8k or flickr30k."
         exit 1
