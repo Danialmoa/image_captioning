@@ -6,12 +6,13 @@ from torchvision import models
 class Encoder(nn.Module):
     def __init__(self, embed_size=256):
         super(Encoder, self).__init__()
-        for param in resnet.parameters():
-            param.requires_grad = False
         #resnet = models.resnet50(weights='IMAGENET1K_V1') # Change from v10
         
-        
+        for param in resnet.parameters():
+            param.requires_grad = False
         resnet = models.resnet101(weights='IMAGENET1K_V2') 
+        for param in resnet.parameters():
+            param.requires_grad = False
         self.feature_extractor = nn.Sequential(*list(resnet.children())[:-2])
         self.conv = nn.Conv2d(2048, embed_size, kernel_size=1) 
         
@@ -133,7 +134,7 @@ if __name__ == "__main__":
     data_set = DataSet(config.path, transform, tokenizer, data_type="train", sample_size=10)
     data_loader = DataLoader(data_set, batch_size=2, shuffle=True)
     
-    images, captions = next(iter(data_loader))
+    images, captions, image_names = next(iter(data_loader))
     images = images.to(device)
     captions = captions.to(device)
     
