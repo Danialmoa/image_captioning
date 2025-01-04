@@ -163,5 +163,9 @@ class Config:
             self.model_name = "run_14"
             self.model_type = "attention"
             
+            self.max_length = 37
+            self.padding_idx = 8778
+            self.vocab_size = 8785
+            
             
 config = Config()
