@@ -16,7 +16,7 @@ from text.tokenizer import Tokenizer
 import wandb
 
 
-
+import sys
 
 class EarlyStopping:
     def __init__(self, model, path, patience=10, delta=0):
@@ -52,7 +52,7 @@ class Trainer:
         self.optimizer = Adam(self.image_captioning_model.parameters(), lr=self.config.learning_rate)
         #self.scheduler = torch.optim.lr_scheduler.StepLR(self.optimizer, step_size=10, gamma=0.1)
         self.scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
-            self.optimizer, mode='min', factor=0.5, patience=5
+            self.optimizer, mode='min', factor=0.8, patience=5
         )
         
         self.criterion = CrossEntropyLoss(ignore_index=self.config.padding_idx)
@@ -133,9 +133,15 @@ class Trainer:
 if __name__ == "__main__":
 
     os.makedirs(os.path.join("models/checkpoints"), exist_ok=True)
-    experiment_id = 13
-    config = Config(experiment_id=experiment_id)
-    os.makedirs(os.path.join("models/checkpoints", config.model_name), exist_ok=True)
+    
+    # get the experiment id from input
+    experiment_id = int(input("Enter the experiment id: "))
+    try:
+        config = Config(experiment_id=experiment_id)
+        os.makedirs(os.path.join("models/checkpoints", config.model_name), exist_ok=True)
+    except Exception as e:
+        print("Please enter a valid experiment id")
+        sys.exit(1)
 
     print(f"Experiment {experiment_id}, name {config.model_name}")
     
@@ -182,6 +188,8 @@ if __name__ == "__main__":
     )
     
     transform = transforms.Compose([
+        transforms.ColorJitter(brightness=0.2, contrast=0.2, saturation=0.2),
+        transforms.RandomAffine(degrees=5, translate=(0.05, 0.05)),
         transforms.Resize((256, 256)),
         transforms.ToTensor(),
         transforms.Normalize(
