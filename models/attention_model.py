@@ -8,8 +8,6 @@ class Encoder(nn.Module):
         super(Encoder, self).__init__()
         #resnet = models.resnet50(weights='IMAGENET1K_V1') # Change from v10
         
-        for param in resnet.parameters():
-            param.requires_grad = False
         resnet = models.resnet101(weights='IMAGENET1K_V2') 
         for param in resnet.parameters():
             param.requires_grad = False
