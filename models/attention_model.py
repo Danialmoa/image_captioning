@@ -6,7 +6,11 @@ from torchvision import models
 class Encoder(nn.Module):
     def __init__(self, embed_size=256):
         super(Encoder, self).__init__()
+        for param in resnet.parameters():
+            param.requires_grad = False
         #resnet = models.resnet50(weights='IMAGENET1K_V1') # Change from v10
+        
+        
         resnet = models.resnet101(weights='IMAGENET1K_V2') 
         self.feature_extractor = nn.Sequential(*list(resnet.children())[:-2])
         self.conv = nn.Conv2d(2048, embed_size, kernel_size=1) 
@@ -18,6 +22,7 @@ class Encoder(nn.Module):
         # ) # EXP 11
 
     def forward(self, images):
+        
         features = self.feature_extractor(images) 
         features = self.conv(features) 
         return features
@@ -31,6 +36,12 @@ class Attention(nn.Module):
         self.full_att = nn.Linear(attention_dim, 1)
         self.softmax = nn.Softmax(dim=1)
         self.relu = nn.ReLU()
+        self.init_weights() 
+    
+    def init_weights(self):
+        nn.init.xavier_uniform_(self.encoder_att.weight)
+        nn.init.xavier_uniform_(self.decoder_att.weight)
+        nn.init.xavier_uniform_(self.full_att.weight)
 
     def forward(self, encoder_features, decoder_hidden):
         batch_size, embed_size, H, W = encoder_features.size()

@@ -167,5 +167,22 @@ class Config:
             self.padding_idx = 8778
             self.vocab_size = 8785
             
+        elif experiment_id == 15:
+            # Add weight initialisation, reduce the scheduler factor, and add augmentation and color jitter
+            # Freeze the ResNet101 
+            self.learning_rate = 0.0001
+            self.batch_size = 16
+            self.hidden_dim = 256
+            self.attention_dim = 256
+            self.decoder_dim = 512
+            self.encoder_dim = 256
+            self.embed_size = 256
+            self.model_name = "run_15"
+            self.model_type = "attention"
+            
+            self.max_length = 37
+            self.padding_idx = 8778
+            self.vocab_size = 8785
+            
             
 config = Config()

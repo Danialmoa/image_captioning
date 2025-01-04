@@ -75,7 +75,7 @@ def analyze_results(true_captions, predicted_captions, image_names, model_name):
     return results_df
 
 if __name__ == "__main__":
-    MODEL_NAME = "run_13"
+    MODEL_NAME = "run_14"
     
     data_path = f"models/checkpoints/{MODEL_NAME}/predictions.csv"
     results_df = pd.read_csv(data_path)

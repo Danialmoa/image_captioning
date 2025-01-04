@@ -56,7 +56,7 @@ class CaptionPredictor:
 
 
 if __name__ == "__main__":
-    run_id = 13
+    run_id = 14
     MODEL_PATH = f"models/checkpoints/run_{run_id}"
     
     config = Config(experiment_id=run_id)
