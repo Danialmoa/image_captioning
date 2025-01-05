@@ -2,7 +2,7 @@
 This project is a project for the course Nueral Networks, at the Univesity of Siena.
 
 ## Project Description
-The project is about image captioning, which is a task of generating a natural language description of an image.
+The project is about image captioning, which is a task of generating a description of an image.
 
 ## Project Structure
 The project is structured as follows:
