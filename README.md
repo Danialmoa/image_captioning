@@ -23,3 +23,7 @@ The project is structured as follows:
 - `scripts/`: 
     - `start.sh`: contains the code for making environment and install the dependencies
     - `prepare_data.sh`: contains the code for downloading-preprocessing dataset
+
+
+## Running the project in sample data
+- `run.py`: contains the code for running the project
