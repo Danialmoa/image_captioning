@@ -3,10 +3,13 @@ from inference.caption_predictor import CaptionPredictor
 from utils.config import Config
 import torch
 from models.attention_model import ImageCaptioningWithAttention
+from inference.evaluation import analyze_results
 from text.tokenizer import Tokenizer
 from torchvision import transforms
 from torch.utils.data import DataLoader
 from tqdm import tqdm
+import pandas as pd
+
 
 def run():
     
@@ -35,16 +38,30 @@ def run():
     predictor = CaptionPredictor(model, transform, tokenizer, config, device)
     
     sample_set = DataSet(config.path, transform, tokenizer, data_type="test")
-    print(sample_set[0])
 
     sample_loader = DataLoader(sample_set, batch_size=4, shuffle=False)
     
+    final_df = pd.DataFrame(columns=["image_name", "true_caption", "predicted_caption"])
+    
+    predicted_captions = []
+    true_captions = []
+    image_names_all = []
+
     for i, (images, captions, image_names) in tqdm(enumerate(sample_loader), total=len(sample_loader), desc="Predicting captions"):
-        predicted_captions = predictor.predict_multiple_images(images)
-        true_captions = [tokenizer.decode_caption(caption) for caption in captions]
-        print(predicted_captions)
-        print(true_captions)
-        break
+        predicted_captions.extend(predictor.predict_multiple_images(images))
+        true_captions.extend([tokenizer.decode_caption(caption) for caption in captions])
+        image_names_all.extend([this_image_name for this_image_name in image_names])
+        
+    final_df = analyze_results(true_captions, predicted_captions, image_names_all, "best", save=False)
+    best_prediction_captions = final_df.loc[final_df.groupby('Image Name')['BLEU Score'].idxmax()]
+    
+    best_prediction_captions.sort_values(by="BLEU Score", ascending=False, inplace=True)
+    for i in range(len(best_prediction_captions)):
+        print("Image path: ", "data/sample_data/test/images/" + best_prediction_captions['Image Name'].iloc[i])
+        print("True Caption: ", best_prediction_captions['True Caption'].iloc[i])
+        print("Predicted Caption: ", best_prediction_captions['Predicted Caption'].iloc[i])
+        print("BLEU Score: ", best_prediction_captions['BLEU Score'].iloc[i])
+        print("-"*50)
 
 if __name__ == "__main__":
     run()

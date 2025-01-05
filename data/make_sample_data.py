@@ -24,4 +24,4 @@ def make_sample_data(sample_size):
 
 if __name__ == "__main__":
     number_of_images = 10
-    make_sample_data(number_of_images * 5)
+    make_sample_data(number_of_images)

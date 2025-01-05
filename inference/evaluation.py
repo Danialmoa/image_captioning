@@ -31,7 +31,7 @@ def post_process_caption(caption, type="prediction"):
         caption = caption + '.'
         
     # Drop <pad> , <end> , <start>
-    caption = caption.replace('<pad>', '').replace('<end>', '').replace('<start>', '')
+    caption = caption.replace('<pad>', '').replace('<end>', '').replace('<start>', '').replace('  ', '')
         
     if type == "prediction":
         # Remove duplicate consecutive words
@@ -41,7 +41,7 @@ def post_process_caption(caption, type="prediction"):
     
     return caption
 
-def analyze_results(true_captions, predicted_captions, image_names, model_name):
+def analyze_results(true_captions, predicted_captions, image_names, model_name, save=True):
     """
     Analyze and display caption generation results
     """
@@ -69,7 +69,8 @@ def analyze_results(true_captions, predicted_captions, image_names, model_name):
     print(f"Median BLEU Score: {np.median(individual_scores):.4f}")
     print(f"Standard Deviation: {np.std(individual_scores):.4f}")
     
-    results_df.to_csv(f"models/checkpoints/{model_name}/results.csv", index=False)
+    if save:
+        results_df.to_csv(f"models/checkpoints/{model_name}/results.csv", index=False)
     
     return results_df
 
