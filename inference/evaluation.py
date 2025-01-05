@@ -63,7 +63,6 @@ def analyze_results(true_captions, predicted_captions, image_names, model_name):
     # Sort by BLEU score
     results_df = results_df.sort_values('BLEU Score')
     
-    # Print overall statistics
     print("\nOverall Statistics:")
     print(f"Overall BLEU Score: {overall_bleu:.4f}")
     print(f"Average Individual BLEU Score: {np.mean(individual_scores):.4f}")
@@ -75,7 +74,7 @@ def analyze_results(true_captions, predicted_captions, image_names, model_name):
     return results_df
 
 if __name__ == "__main__":
-    MODEL_NAME = "run_15"
+    MODEL_NAME = "run_14"
     
     data_path = f"models/checkpoints/{MODEL_NAME}/predictions.csv"
     results_df = pd.read_csv(data_path)
