@@ -12,7 +12,7 @@ from data.data_set import DataSet
 from text.tokenizer import Tokenizer
 
 class CaptionPredictor:
-    def __init__(self, model, transform, tokenizer, config, device):
+    def __init__(self, model, transform, tokenizer, config, device, temperature=0.8):
         self.model = model
         self.transform = transform
         self.tokenizer = tokenizer
@@ -20,6 +20,7 @@ class CaptionPredictor:
         self.device = device
         
         self.model.eval()
+        self.temperature = temperature
 
     def predict_single_image(self, image):
         with torch.no_grad():
@@ -29,8 +30,7 @@ class CaptionPredictor:
             for _ in range(self.config.max_length):
                 inputs = torch.tensor([caption]).to(self.device)
                 outputs = self.model.decoder(features, inputs)
-                temperature = 0.8  
-                probs = torch.softmax(outputs[:, -1, :] / temperature, dim=-1)
+                probs = torch.softmax(outputs[:, -1, :] / self.temperature, dim=-1)
                 word = torch.multinomial(probs, 1).item()
                 caption.append(word)
                 if word == self.tokenizer.word_to_idx['<end>']:
@@ -52,13 +52,13 @@ class CaptionPredictor:
             'PredictedCaption': predicted_captions
         })
         results_df['ImageName'] = image_names
-        results_df.to_csv(f'{model_path}/predictions.csv', index=False)
+        results_df.to_csv(f'{model_path}/predictions_temp_{self.temperature}.csv', index=False)
 
 
 if __name__ == "__main__":
-    run_id = 15
+    run_id = 14
     MODEL_PATH = f"models/checkpoints/run_{run_id}"
-    
+    TEMPERATURE = 0.8
     config = Config(experiment_id=run_id)
     device = "cuda" if torch.cuda.is_available() else "mps" if torch.backends.mps.is_available() else "cpu"
     
@@ -78,7 +78,7 @@ if __name__ == "__main__":
     print(len(test_set))
     test_loader = DataLoader(test_set, batch_size=8, shuffle=False)
     
-    predictor = CaptionPredictor(model, transform, tokenizer, config, device)
+    predictor = CaptionPredictor(model, transform, tokenizer, config, device, temperature=TEMPERATURE)
     predicted_captions = []
     true_captions = []
     image_names_all = []

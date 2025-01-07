@@ -9,8 +9,8 @@ class Encoder(nn.Module):
         #resnet = models.resnet50(weights='IMAGENET1K_V1') # Change from v10
         
         resnet = models.resnet101(weights='IMAGENET1K_V2') 
-        for param in resnet.parameters():
-            param.requires_grad = False
+        # for param in resnet.parameters(): # Run 16
+        #     param.requires_grad = False
         self.feature_extractor = nn.Sequential(*list(resnet.children())[:-2])
         self.conv = nn.Conv2d(2048, embed_size, kernel_size=1) 
         
@@ -57,13 +57,15 @@ class Attention(nn.Module):
         return context, alpha
         
 class DecoderWithAttention(nn.Module):
-    def __init__(self, embed_size, attention_dim, decoder_dim, vocab_size, encoder_dim=256, num_layers=1):
+    def __init__(self, embed_size, attention_dim, decoder_dim, vocab_size, encoder_dim=256):
         super(DecoderWithAttention, self).__init__()
         self.attention = Attention(encoder_dim, decoder_dim, attention_dim) 
         self.embedding = nn.Embedding(vocab_size, embed_size)
         self.lstm = nn.LSTMCell(embed_size + encoder_dim, decoder_dim)
         self.fc = nn.Linear(decoder_dim, vocab_size)
         self.dropout = nn.Dropout(0.5)
+        
+        self.attention_weights = [] # For storing attention weights-> visualization
 
     def forward(self, encoder_features, captions):
         batch_size = encoder_features.size(0)
@@ -76,7 +78,8 @@ class DecoderWithAttention(nn.Module):
 
         outputs = torch.zeros(batch_size, seq_length, vocab_size).to(encoder_features.device)
         for t in range(seq_length):
-            context, _ = self.attention(encoder_features, h) 
+            context, alpha = self.attention(encoder_features, h) 
+            self.attention_weights.append(alpha.squeeze().detach().cpu().numpy())
             lstm_input = torch.cat([embeddings[:, t, :], context], dim=1) 
             h, c = self.lstm(lstm_input, (h, c)) 
             output = self.fc(self.dropout(h))
@@ -87,7 +90,7 @@ class DecoderWithAttention(nn.Module):
     def init_hidden_state(self, batch_size):
         return (torch.zeros(batch_size, self.lstm.hidden_size).to(next(self.parameters()).device),
                 torch.zeros(batch_size, self.lstm.hidden_size).to(next(self.parameters()).device))
-        
+
         
 class ImageCaptioningWithAttention(nn.Module):
     def __init__(self, embed_size, attention_dim, decoder_dim, vocab_size, encoder_dim=256):
@@ -99,6 +102,9 @@ class ImageCaptioningWithAttention(nn.Module):
         encoder_features = self.encoder(images) 
         outputs = self.decoder(encoder_features, captions)
         return outputs
+    
+    def return_alphas(self):
+        return self.decoder.attention_weights
         
         
 if __name__ == "__main__":

@@ -50,7 +50,6 @@ class Trainer:
         self.image_captioning_model = image_captioning_model.to(self.config.device)
         
         self.optimizer = Adam(self.image_captioning_model.parameters(), lr=self.config.learning_rate)
-        #self.scheduler = torch.optim.lr_scheduler.StepLR(self.optimizer, step_size=10, gamma=0.1)
         self.scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
             self.optimizer, mode='min', factor=0.8, patience=5
         )

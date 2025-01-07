@@ -70,14 +70,14 @@ def analyze_results(true_captions, predicted_captions, image_names, model_name, 
     print(f"Standard Deviation: {np.std(individual_scores):.4f}")
     
     if save:
-        results_df.to_csv(f"models/checkpoints/{model_name}/results.csv", index=False)
+        results_df.to_csv(f"models/checkpoints/{model_name}/results_temp.csv", index=False)
     
     return results_df
 
 if __name__ == "__main__":
     MODEL_NAME = "run_14"
     
-    data_path = f"models/checkpoints/{MODEL_NAME}/predictions.csv"
+    data_path = f"models/checkpoints/{MODEL_NAME}/predictions_temp.csv"
     results_df = pd.read_csv(data_path)
 
     true_captions = results_df["TrueCaption"].tolist()

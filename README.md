@@ -27,3 +27,6 @@ The project is structured as follows:
 
 ## Running the project in sample data
 - `run.py`: contains the code for running the project
+
+## Running history 
+- https://wandb.ai/danialmoafi-universit-degli-studi-di-siena/imageCaptioning/reports/Image-Captioning-Attention---VmlldzoxMDgzOTM0NQ?accessToken=a0bccag9s1xae2xtzgwk58wqa7jw3u4i84yfunwih7q3fe5zwdvmyenufa8821v0
