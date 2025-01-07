@@ -38,9 +38,9 @@ class Attention(nn.Module):
         self.init_weights() 
     
     def init_weights(self):
-        nn.init.xavier_uniform_(self.encoder_att.weight)
-        nn.init.xavier_uniform_(self.decoder_att.weight)
-        nn.init.xavier_uniform_(self.full_att.weight)
+        nn.init.xavier_uniform_(self.encoder_att.weight) # added after run 13
+        nn.init.xavier_uniform_(self.decoder_att.weight) # added after run 13
+        nn.init.xavier_uniform_(self.full_att.weight) # added after run 13
 
     def forward(self, encoder_features, decoder_hidden):
         batch_size, embed_size, H, W = encoder_features.size()
@@ -108,6 +108,7 @@ class ImageCaptioningWithAttention(nn.Module):
         
         
 if __name__ == "__main__":
+    # Just for testing the model
     import utils.config as config
     from data.data_set import DataSet
     from torch.utils.data import DataLoader

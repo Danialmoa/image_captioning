@@ -12,7 +12,7 @@ import pandas as pd
 
 
 def run():
-    
+    # load the best model
     model_path = "models/final_model/best_model.pth"
     config = Config(experiment_id='best')
     device = "cuda" if torch.cuda.is_available() else "mps" if torch.backends.mps.is_available() else "cpu"
@@ -24,14 +24,17 @@ def run():
         config.vocab_size, 
         config.encoder_dim).to(device)
     
+    # load the model
     model.load_state_dict(torch.load(model_path, map_location=device, weights_only=True))
     
+    # load the transform
     transform = transforms.Compose([
         transforms.Resize((224, 224)),
         transforms.ToTensor(),
         transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
     ])
     
+    # load the tokenizer
     tokenizer = Tokenizer()
     tokenizer.load_dicts(config.path + "/dicts.pkl")
     
