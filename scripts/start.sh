@@ -7,7 +7,9 @@ echo "🚀 Starting project setup..."
 
 # Create and activate Python virtual environment
 echo "📦 Creating Python virtual environment..."
-python3 -m venv .venv
+
+# check the python version, it should be <=3.11
+python3.11 -m venv .venv
 source .venv/bin/activate
 
 # Install requirements
